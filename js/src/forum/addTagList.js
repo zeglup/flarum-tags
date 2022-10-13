@@ -42,6 +42,15 @@ export default function () {
       items.add('tag' + tag.id(), TagLinkButton.component({ model: tag, params, active }, tag?.name()), -14);
     };
 
-    tags.forEach(addTag);
+    sortTags(tags)
+      .filter(
+        (tag) => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent())))
+      )
+      .forEach(addTag);
+
+    const more = tags.filter((tag) => tag.position() === null).sort((a, b) => b.discussionCount() - a.discussionCount());
+
+    more.forEach(addTag);
+
   });
 }
